@@ -1,0 +1,3 @@
+﻿CREATE TABLE DemoFacility ( Facility_no int NOT NULL PRIMARY KEY, Name VARCHAR(30) NOT NULL,)
+
+CREATE TABLE HotelFacility ( Id int NOT NULL PRIMARY KEY, Price Decimal NOT NULL, Hotel_no int NOT NULL, FOREIGN KEY (Hotel_no) REFERENCES DemoHotel(Hotel_no), Facility_no int NOT NULL, FOREIGN KEY (Facility_no) REFERENCES DemoFacility(Facility_no))

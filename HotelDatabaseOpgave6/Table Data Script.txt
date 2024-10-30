@@ -1,0 +1,17 @@
+﻿INSERT INTO DemoFacility (Facility_no, Name) VALUES
+(1, 'Swimming Pool'),      
+(2, 'Gym'),                
+(3, 'Bar'),                
+(4, 'Tennis Court'),       
+(5, 'Spa'),                
+(6, 'Conference Room'),    
+(7, 'Rooftop Lounge');     
+
+INSERT INTO HotelFacility (Id, Price, Hotel_no, Facility_no) VALUES
+(1, 200.00, 1, 1),  
+(2, 150.00, 2, 2),  
+(3, 100.00, 3, 3),  
+(4, 120.00, 4, 4),  
+(5, 250.00, 5, 5),  
+(6, 300.00, 6, 6),  
+(7, 180.00, 7, 7);  
