@@ -29,17 +29,32 @@ namespace HotelDBConnection
         }
         private int DeleteFacility(SqlConnection connection, int facilityNo)
         {
-            Console.WriteLine("DeleteFacility");
             string deleteQuery = "DELETE FROM DemoFacility WHERE Facility_no = @FacilityNo";
-            Console.WriteLine(deleteQuery);
+            using (SqlCommand deleteCommand = new SqlCommand(deleteQuery, connection))
+            {
+                deleteCommand.Parameters.AddWithValue("@FacilityNo", facilityNo);
+                int rowsAffected = deleteCommand.ExecuteNonQuery();
+                Console.WriteLine($"Facility deleted. Rows affected: {rowsAffected}");
+            }
 
-            SqlCommand command = new SqlCommand(deleteQuery, connection);
-            command.Parameters.AddWithValue("@FacilityNo", facilityNo);
+            // First, get the max Facility_no
+            string maxQuery = "SELECT ISNULL(MAX(Facility_no), 0) FROM DemoFacility";
+            int maxFacilityNo;
+            using (SqlCommand maxCommand = new SqlCommand(maxQuery, connection))
+            {
+                maxFacilityNo = (int)maxCommand.ExecuteScalar();
+            }
 
-            int rowsAffected = command.ExecuteNonQuery();
-            Console.WriteLine($"Facility deleted. Rows affected: {rowsAffected}");
-            return rowsAffected;
+            // Then, use the max Facility_no in the DBCC CHECKIDENT command
+            string reseedQuery = $"DBCC CHECKIDENT ('DemoFacility', RESEED, {maxFacilityNo})";
+            using (SqlCommand reseedCommand = new SqlCommand(reseedQuery, connection))
+            {
+                reseedCommand.ExecuteNonQuery();
+            }
+
+            return 1; // Return 1 to indicate that something was deleted
         }
+
 
         private int UpdateFacility(SqlConnection connection, Facility facility)
         {
@@ -105,9 +120,9 @@ namespace HotelDBConnection
                     Console.WriteLine(facility);
                 }
 
-                //CreateFacility(connection, new Facility { Name = "Disco", });
+                //CreateFacility(connection, new Facility { Name = "yo", });
                 //UpdateFacility(connection, new Facility { Facility_no = 8, Name = "Updated Spa", });
-                DeleteFacility(connection, 9);
+                //DeleteFacility(connection, 9);
 
                 Console.WriteLine("After changes:");
                 facilities = ReadFacilities(connection);
